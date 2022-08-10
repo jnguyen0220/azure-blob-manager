@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name='azure-blob-manager',
-    packages=find_packages(include=['azure-blob-manager']),
+    name='azure_blob_manager',
+    packages=find_packages(include=['azure_blob_manager']),
     long_description=long_description,
     long_description_content_type="text/markdown",
     version='0.0.1',
