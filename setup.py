@@ -8,7 +8,7 @@ setup(
     packages=find_packages(include=['azure-blob-manager']),
     long_description=long_description,
     long_description_content_type="text/markdown",
-    version='0.1.0',
+    version='0.0.1',
     url="https://github.com/jnguyen0220/azure-blob-manager",
     description='Python wrapper for Microsoft azure-storage-blob library',
     author='jonny_nguyen@outlook.com',
