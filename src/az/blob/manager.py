@@ -24,10 +24,23 @@ def download_blob(container, path):
     except Exception as e:
         return [False, e]
 
+def exists(container, pattern, file_paths = []):
+    result = []
+    try:
+        for i in file_paths:
+            file_obj = container.get_blob_client(f'{pattern}/{i}') 
+            if file_obj.exists():
+                result.append(i)
+        return [True, result]
+    except Exception as e:
+        return [False, e]
 
 class AzureBlobManager:
     def __init__(self, connection_string):
         self.connection = BlobServiceClient.from_connection_string(connection_string)
+
+    def connection(self):
+        return self.connection
 
     def list_blobs(self, container_name):
         container = self.connection.get_container_client(container_name)
@@ -38,13 +51,20 @@ class AzureBlobManager:
         return upload_blob(container, blob_name, data)
 
     def download_blob(self, container_name, path):
-        container =  self.connection.get_container_client(container_name)
+        container = self.connection.get_container_client(container_name)
         return download_blob(container, path)
+
+    def exist(self, pattern, file_paths):
+        container = self.connection.get_container_client(container_name)
+        return exists(container, pattern, file_paths)
     
 class AzureBlobSas:
     def __init__(self, sas_url):
         self.container = ContainerClient.from_container_url(sas_url)
-    
+
+    def container(self):
+        return self.container
+
     def list_blobs(self):
         return list_blobs(self.container)
 
@@ -53,6 +73,10 @@ class AzureBlobSas:
 
     def download_blob(self, path):
         return download_blob(self.container, path)
+    
+    def exist(self, pattern, file_paths):
+        return exists(self.container, pattern, file_paths)
+
 
 if __name__ == "__main__":
     f = bytes("some initial text data",'UTF-8') 
@@ -69,5 +93,6 @@ if __name__ == "__main__":
     list_success, list_response = azure_sas.list_blobs()
     upload_success, upload_response = azure_sas.upload_blob("data/jonny-test.txt", f)
     download_success, download_response = azure_sas.download_blob("data/jonny-test.txt")
+    azure_sas.exist(['60d_Complete_COP-31-OCT-21.csv'])
 
     print("SAS", list_success, upload_success, download_success)
